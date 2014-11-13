@@ -4,7 +4,7 @@ from __future__ import division
 __author__ = "Erik Stayton"
 __copyright__ = "Copyright 2014 Erik Stayton"
 __license__ = "CC-BY-SA"
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __status__ = 'Development'
 
 import random;
@@ -67,8 +67,9 @@ def replacer(phrase):
 def verse():
 #TODO split this into different word sections, to preserve the
     #structure and the prepositions/articles in the text
-    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
+#    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
 #    return "arms and the man"
+    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
 
 
 def templater(current):
