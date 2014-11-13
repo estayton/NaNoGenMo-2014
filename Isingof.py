@@ -64,17 +64,27 @@ def replacer(phrase):
             newphrase += " "
     return newphrase
 
+def interleave(tupleArrays):
+    (first,second) = tupleArrays;
+    final = first + second
+    final[::2] = first
+    final[1::2] = second
+    return final
+
 def verse():
 #TODO split this into different word sections, to preserve the
     #structure and the prepositions/articles in the text
 #    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
 #    return "arms and the man"
-    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
+    return (["arms ", "man ", "of old ", "coasts of Troy ", "exile ", "fate, ","Italy ","shore ", "hard driven ", "land ", "deep ", "violence ", "heaven, ", "cruel Juno's unforgetful anger, ","hard bestead ", "war ", "city ", "carry his gods ", "whom ", "Latin race, ", "lords ", "stately city Rome."],["and the ","who ","from the ","came, an ","of ", "to ", "and to the ", "of Lavinium; ", "on ","and on the ","by the ","of ","for ","and ","in ","also ere he might found a","and ", "into Latium; from ","is the ", "the ", "of Alba, and the "])
 
 
 def templater(current):
     ver = replacer(current)
     return ver 
+
+def printer(start, verse):
+    return "" + start + string.join(interleave(verse),'') + "\n"
 
 def repeatfilter(verse):
     derepeat = []
@@ -84,20 +94,21 @@ def repeatfilter(verse):
         if k == 0: derepeat.append(words[k])
         elif k > 0 and words[k] != words[k-1]:
             derepeat.append(words[k])
-    return string.join(derepeat)
+    return string.join(derepeat)+" "
 
-def printverse(current):
-    verse = templater(current)
-    verse = repeatfilter(verse)
-    verse += "\n"
-    return verse.replace("_"," ");
+def nextverse(current):
+    (tochange,fixed) = current;
+    changed = []
+    for item in tochange:
+        changed.append(repeatfilter(templater(item)).replace("_"," "))
+    return (changed,fixed);
 
 if __name__ == '__main__':
-    print "I sing of " + verse() + "\n"
+    print printer("I sing of ", verse())
     current = verse()
     for i in range(0,624):
-        nextv = printverse(current)
-        print "I sing of " + nextv
+        nextv = nextverse(current)
+        print printer("I sing of ", nextv)
 #        print "I sing of " + nextv
         current = nextv
 
