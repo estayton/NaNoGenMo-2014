@@ -27,7 +27,9 @@ def captitle(word): #capitalize the first letter of a word
 #TODO consider a more intelligent way to trim, or a move back to
 #keeping wordnet "words" like british_west_africa together as one
 def trimphrase(phrase,length):
-    splitphrase = phrase.replace("_"," ").split()
+###FIX put this back
+###    splitphrase = phrase.replace("_"," ").split()
+    splitphrase = phrase.split()
 #    newlength = len(splitphrase)
     splitphrase.reverse()
 #    print "SPLITPHRASE: " + str(splitphrase)
@@ -97,7 +99,7 @@ def templater(current):
     return ver 
 
 def printer(start, verse):
-    return "" + start + string.join(interleave(verse),'') + "\n"
+    return "" + start + string.join(interleave(verse),'').replace("_"," ") + "\n"
 
 def repeatfilter(verse):
 #    print "VERSE: "+str(verse)
@@ -115,14 +117,19 @@ def nextverse(current):
     (tochange,fixed) = current;
     changed = []
     for item in tochange:
-        changed.append(repeatfilter(templater(item)).replace("_"," "))
+#        changed.append(repeatfilter(templater(item)).replace("_"," "))
+        changed.append(repeatfilter(templater(item)))
     return (changed,fixed);
 
 if __name__ == '__main__':
+    f = open('output.txt','w')
+    f.write(printer("I sing of ", verse()))
+
     print printer("I sing of ", verse())
     current = verse()
     for i in range(0,624):
         nextv = nextverse(current)
+        f.write(printer("\n I sing of ", nextv))
         print printer("I sing of ", nextv)
 #        print "I sing of " + nextv
         current = nextv
