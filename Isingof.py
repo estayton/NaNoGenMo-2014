@@ -24,13 +24,27 @@ def join(array1,array2): #join two arrays and return the result
 def captitle(word): #capitalize the first letter of a word
     return word[0].title()+word[1:]
 
+#TODO consider a more intelligent way to trim, or a move back to
+#keeping wordnet "words" like british_west_africa together as one
+def trimphrase(phrase,length):
+    splitphrase = phrase.replace("_"," ").split()
+#    newlength = len(splitphrase)
+    splitphrase.reverse()
+#    print "SPLITPHRASE: " + str(splitphrase)
+#    print "LENGTH: " + str(length)
+    splitphrase = splitphrase[:length]
+#    print "SPLITPHRASE: " + str(splitphrase)
+    splitphrase.reverse()
+    return string.join(splitphrase) + " "
+
 def replacer(phrase):
     newphrase = ""
-    skipcounter = 0
+    length = len(phrase.split())
+#    skipcounter = 0
     for word in phrase.split():
-        if skipcounter > 0:
-            skipcounter = skipcounter - 1
-        else: 
+#        if skipcounter > 0:
+#            skipcounter = skipcounter - 1
+#        else: 
             w = word.lower()
             syns = wn.synsets(w)
             hypo = []
@@ -39,29 +53,30 @@ def replacer(phrase):
             if len(syns) > 0: hyper = syns[0].hypernyms()
 #        print hypo
 #        print hyper
-#TODO consider aggregating all the possible wordsets rather than
-#choosing individually
+#TODO check if we need to add back in len(word) > 2 conditions!
             wordset = []
             newword = ""
-            if len(syns) > 1 and len(word) > 3 and random.random() > 0.5:
+            if len(hypo) > 0 and random.random() > 0.5:
+                wordset = hypo
+            elif len(hyper) > 0 and random.random() > 0.5:
+                wordset = hyper
+            elif random.random() > 0.2:
 #            print syns
 #            print random.choice(syns).lemma_names()[0]
-                wordset = syns[1:]
-            elif len(hypo) > 0 and len(word) > 2 and random.random() > 0.5:
-                wordset = hypo
-            elif len(hyper) > 0 and len(word) > 2 and random.random() > 0.5:
-                wordset = hyper
+                wordset = syns
             if len(wordset) > 0:
 #            print "REP"
-                newword = random.choice(wordset).lemma_names()[0];
+                newword = random.choice(random.choice(wordset).lemma_names());
             else: newword = word;
 #        print "NEW "+newword
         
-            newlength = len(newword.split("_"))
-            if newlength > 1:
-                skipcounter = newlength - 1 - math.floor(random.random() + 0)
+#            newlength = len(newword.split("_"))
+#            if newlength > 1:
+#                skipcounter = newlength - 1 - math.floor(random.random() + 0)
             newphrase += newword
             newphrase += " "
+    newphrase = trimphrase(newphrase,length)
+#    print "NEWPHRASE: "+ str(newphrase)
     return newphrase
 
 def interleave(tupleArrays):
@@ -72,11 +87,9 @@ def interleave(tupleArrays):
     return final
 
 def verse():
-#TODO split this into different word sections, to preserve the
-    #structure and the prepositions/articles in the text
 #    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
 #    return "arms and the man"
-    return (["arms ", "man ", "of old ", "coasts of Troy ", "exile ", "fate, ","Italy ","shore ", "hard driven ", "land ", "deep ", "violence ", "heaven, ", "cruel Juno's unforgetful anger, ","hard bestead ", "war ", "city ", "carry his gods ", "whom ", "Latin race, ", "lords ", "stately city Rome."],["and the ","who ","from the ","came, an ","of ", "to ", "and to the ", "of Lavinium; ", "on ","and on the ","by the ","of ","for ","and ","in ","also ere he might found a","and ", "into Latium; from ","is the ", "the ", "of Alba, and the "])
+    return (["arms ", "man ", "of old ", "coasts of Troy ", "exile ", "fate, ","Italy ","shore ", "hard driven ", "land ", "deep ", "violence ", "heaven, ", "cruel Juno's unforgetful anger, ","hard bestead ", "war ", "city ", "carry his gods ", "whom ", "Latin race, ", "lords ", "stately city Rome."],["and the ","who ","from the ","came, an ","of ", "to ", "and to the ", "of Lavinium; ", "on ","and on the ","by the ","of ","for ","and ","in ","also ere he might found a ","and ", "into Latium; from ","is the ", "the ", "of Alba, and the "])
 
 
 def templater(current):
@@ -87,6 +100,8 @@ def printer(start, verse):
     return "" + start + string.join(interleave(verse),'') + "\n"
 
 def repeatfilter(verse):
+#    print "VERSE: "+str(verse)
+#    print "TYPE: "+str(type(verse))
     derepeat = []
     words = verse.split()
 #    print "VER"+ verse
