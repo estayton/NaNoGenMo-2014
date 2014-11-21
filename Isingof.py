@@ -3,8 +3,8 @@ from __future__ import division
 "I sing of"
 __author__ = "Erik Stayton"
 __copyright__ = "Copyright 2014 Erik Stayton"
-__license__ = "CC-BY-SA"
-__version__ = "0.0.2"
+__license__ = "CC-BY-SA 4.0"
+__version__ = "1.0.0"
 __status__ = 'Development'
 
 import random;
