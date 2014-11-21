@@ -13,16 +13,9 @@ import os;
 import nltk;
 import string;
 import math;
+import re;
 from nltk.corpus import wordnet as wn;
 
-def join(array1,array2): #join two arrays and return the result
-    output = array1
-    for item in array2:
-        output.append(item)
-    return output
-
-def captitle(word): #capitalize the first letter of a word
-    return word[0].title()+word[1:]
 
 #TODO consider a more intelligent way to trim, or a move back to
 #keeping wordnet "words" like british_west_africa together as one
@@ -94,12 +87,26 @@ def verse():
     return (["arms ", "man ", "of old ", "coasts of Troy ", "exile ", "fate, ","Italy ","shore ", "hard driven ", "land ", "deep ", "violence ", "heaven, ", "cruel Juno's unforgetful anger, ","hard bestead ", "war ", "city ", "carry his gods ", "whom ", "Latin race, ", "lords ", "stately city Rome."],["and the ","who ","from the ","came, an ","of ", "to ", "and to the ", "of Lavinium; ", "on ","and on the ","by the ","of ","for ","and ","in ","also ere he might found a ","and ", "into Latium; from ","is the ", "the ", "of Alba, and the "])
 
 
+def articles(passage):
+    split = re.split(r'\ba\b|\ban\b',passage)
+#    print split
+    articles = []
+    if len(split) > 1:
+        for k in range(1,len(split)):
+            if split[k][1] in ['a','e','i','o','u']:
+                articles.append('an')
+            else:
+                articles.append('a')
+    fixed = interleave((split,articles))
+    return string.join(fixed,'')
+
+
 def templater(current):
     ver = replacer(current)
     return ver 
 
 def printer(start, verse):
-    return "" + start + string.join(interleave(verse),'').replace("_"," ") + "\n"
+    return "" + start + articles(string.join(interleave(verse),'').replace("_"," ")) + "\n"
 
 def repeatfilter(verse):
 #    print "VERSE: "+str(verse)
@@ -117,6 +124,7 @@ def nextverse(current):
     (tochange,fixed) = current;
     changed = []
     for item in tochange:
+#TODO decide if replace or not replace!
 #        changed.append(repeatfilter(templater(item)).replace("_"," "))
         changed.append(repeatfilter(templater(item)))
     return (changed,fixed);
