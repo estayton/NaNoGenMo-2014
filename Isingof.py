@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 from __future__ import division
-"I sing of"
+"I Sing Of"
 __author__ = "Erik Stayton"
 __copyright__ = "Copyright 2014 Erik Stayton"
 __license__ = "CC-BY-SA 4.0"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __status__ = 'Development'
 
 import random;
@@ -15,13 +15,14 @@ import string;
 import math;
 import re;
 from nltk.corpus import wordnet as wn;
+from time import strftime;
 
+#TODO decide on a method to get out of wordnet traps, where one-way
+#links prevent the program from escaping back to the broader network
+#(esp proper nouns)
 
-#TODO consider a more intelligent way to trim, or a move back to
-#keeping wordnet "words" like british_west_africa together as one
 def trimphrase(phrase,length):
-###FIX put this back
-###    splitphrase = phrase.replace("_"," ").split()
+#    splitphrase = phrase.replace("_"," ").split()
     splitphrase = phrase.split()
 #    newlength = len(splitphrase)
     splitphrase.reverse()
@@ -48,7 +49,6 @@ def replacer(phrase):
             if len(syns) > 0: hyper = syns[0].hypernyms()
 #        print hypo
 #        print hyper
-#TODO check if we need to add back in len(word) > 2 conditions!
             wordset = []
             newword = ""
             if len(hypo) > 0 and random.random() > 0.5:
@@ -83,7 +83,6 @@ def interleave(tupleArrays):
 
 def verse():
 #    return "arms and the man who of old from the coasts of Troy came, an exile of fate, to Italy and to the shore of Lavinium; hard driven on land and on the deep by the violence of heaven, for cruel Juno's unforgetful anger, and hard bestead in war also ere he might found a city and carry his gods into Latium; from whom is the Latin race, the lords of Alba, and the stately city Rome."
-#    return "arms and the man"
     return (["arms ", "man ", "of old ", "coasts of Troy ", "exile ", "fate, ","Italy ","shore ", "hard driven ", "land ", "deep ", "violence ", "heaven, ", "cruel Juno's unforgetful anger, ","hard bestead ", "war ", "city ", "carry his gods ", "whom ", "Latin race, ", "lords ", "stately city Rome."],["and the ","who ","from the ","came, an ","of ", "to ", "and to the ", "of Lavinium; ", "on ","and on the ","by the ","of ","for ","and ","in ","also ere he might found a ","and ", "into Latium; from ","is the ", "the ", "of Alba, and the "])
 
 
@@ -130,13 +129,21 @@ def nextverse(current):
     return (changed,fixed);
 
 if __name__ == '__main__':
-    f = open('output.txt','w')
-    f.write(printer("I sing of ", verse()))
+    year = strftime("%Y");
+    random.seed(year);
 
+    f = open('output.txt','w')
+    f.write("  I Sing Of \n\n")
+    f.write("   . 2014 . \n\n\n")
+    f.write(" Chapter 1: I sing of arms and the man \n\n")
+
+    f.write(printer("I sing of ", verse()))
     print printer("I sing of ", verse())
     current = verse()
-    for i in range(0,624):
+    for i in range(1,624):
         nextv = nextverse(current)
+        if i%125 == 0:
+            f.write("\n\n\n Chapter %i: I sing of %s \n\n" % (((i / 125)+1), printer("",nextv).split('who')[0]))
         f.write(printer("\n I sing of ", nextv))
         print printer("I sing of ", nextv)
 #        print "I sing of " + nextv
